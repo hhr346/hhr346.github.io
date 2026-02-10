@@ -1,0 +1,79 @@
+---
+interface Props {
+  title: string;
+  authors: string;
+  venue?: string;
+  year: number;
+  pdf?: string;
+  link?: string;
+}
+
+const { title, authors, venue, year, pdf, link } = Astro.props;
+---
+
+<article class="publication-item">
+  <h3 class="pub-title">
+    {title}
+    {link && <a href={link} target="_blank" rel="noopener noreferrer" class="pub-link">(Link)</a>}
+  </h3>
+  <div class="pub-authors">{authors}</div>
+  <div class="pub-venue">
+    {venue && <span class="venue-text">{venue}, {year}</span>}
+    {pdf && <a href={pdf} target="_blank" rel="noopener noreferrer" class="pub-pdf">PDF</a>}
+  </div>
+</article>
+
+<style>
+  .publication-item {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .publication-item:last-child {
+    border-bottom: none;
+  }
+
+  .pub-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: #111827;
+  }
+
+  .pub-link {
+    margin-left: 0.5rem;
+    font-size: 0.85rem;
+    color: #2563eb;
+    text-decoration: none;
+  }
+
+  .pub-link:hover {
+    text-decoration: underline;
+  }
+
+  .pub-authors {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+  }
+
+  .pub-venue {
+    font-size: 0.9rem;
+    color: #6b7280;
+  }
+
+  .venue-text {
+    color: #6b7280;
+  }
+
+  .pub-pdf {
+    margin-left: 1rem;
+    color: #2563eb;
+    text-decoration: none;
+  }
+
+  .pub-pdf:hover {
+    text-decoration: underline;
+  }
+</style>

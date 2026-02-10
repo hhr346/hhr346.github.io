@@ -1,0 +1,75 @@
+---
+import ContentLayout from '../layouts/ContentLayout.astro';
+import Section from '../components/Section.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<ContentLayout title="项目">
+  <Section>
+    <h2>Featured Projects</h2>
+    <p>这里展示一些我感兴趣和正在进行的项目。</p>
+
+    <article class="project-item">
+      <h3>Project 1</h3>
+      <p class="project-desc">项目描述...</p>
+      <p class="project-tags">
+        <span class="tag">Astro</span>
+        <span class="tag">TypeScript</span>
+      </p>
+    </article>
+
+    <article class="project-item">
+      <h3>Project 2</h3>
+      <p class="project-desc">项目描述...</p>
+      <p class="project-tags">
+        <span class="tag">React</span>
+        <span class="tag">Node.js</span>
+      </p>
+    </article>
+
+    <article class="project-item">
+      <h3>Project 3</h3>
+      <p class="project-desc">项目描述...</p>
+      <p class="project-tags">
+        <span class="tag">Python</span>
+        <span class="tag">AI</span>
+      </p>
+    </article>
+  </Section>
+  <Footer />
+</ContentLayout>
+
+<style>
+  .project-item {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: var(--bg-secondary);
+    border-radius: 6px;
+  }
+
+  .project-item h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.25rem;
+  }
+
+  .project-desc {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin: 0 0 1rem 0;
+  }
+
+  .project-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background-color: #e5e7eb;
+    color: var(--text-secondary);
+    border-radius: 9999px;
+    font-size: 0.8rem;
+  }
+</style>

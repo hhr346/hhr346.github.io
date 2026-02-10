@@ -1,0 +1,66 @@
+---
+import ContentLayout from '../layouts/ContentLayout.astro';
+import Section from '../components/Section.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<ContentLayout title="笔记">
+  <Section>
+    <h2>学习笔记</h2>
+    <p>这里记录一些技术学习笔记和心得。</p>
+
+    <article class="note-item">
+      <div class="note-meta">
+        <time datetime="2024-01-20">2024年1月20日</time>
+      </div>
+      <h3>现代前端开发最佳实践</h3>
+      <p class="note-desc">关于现代前端开发的一些思考...</p>
+    </article>
+
+    <article class="note-item">
+      <div class="note-meta">
+        <time datetime="2024-01-18">2024年1月18日</time>
+      </div>
+      <h3>AI 辅助开发心得</h3>
+      <p class="note-desc">使用 AI 工具提升开发效率的经验...</p>
+    </article>
+
+    <article class="note-item">
+      <div class="note-meta">
+        <time datetime="2024-01-16">2024年1月16日</time>
+      </div>
+      <h3>系统架构设计原则</h3>
+      <p class="note-desc">构建可扩展系统的思考...</p>
+    </article>
+  </Section>
+  <Footer />
+</ContentLayout>
+
+<style>
+  .note-item {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .note-item:last-child {
+    border-bottom: none;
+  }
+
+  .note-meta {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .note-item h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.25rem;
+  }
+
+  .note-desc {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin: 0;
+  }
+</style>

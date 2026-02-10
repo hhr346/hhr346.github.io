@@ -1,0 +1,53 @@
+---
+import ContentLayout from '../layouts/ContentLayout.astro';
+import Section from '../components/Section.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<ContentLayout title="搜索">
+  <Section>
+    <h2>站内搜索</h2>
+    <p>使用 Pagefind 搜索本站点的所有内容。</p>
+
+    <div id="search" class="search-container">
+      <input type="text" id="pagefind-search-input" placeholder="输入关键词搜索..." />
+      <div id="pagefind-search-results"></div>
+    </div>
+  </Section>
+  <Footer />
+</ContentLayout>
+
+<script type="module">
+  import { PagefindSvelte } from "pagefind";
+
+  const search = new PagefindSvelte({
+    element: "#pagefind-search-input",
+    results: "#pagefind-search-results",
+  });
+</script>
+
+<style>
+  .search-container {
+    margin-top: 2rem;
+  }
+
+  #pagefind-search-input {
+    width: 100%;
+    max-width: 500px;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+
+  #pagefind-search-results {
+    margin-top: 1.5rem;
+  }
+
+  .pagefind-search-result {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: var(--bg-secondary);
+    border-radius: 6px;
+  }
+</style>

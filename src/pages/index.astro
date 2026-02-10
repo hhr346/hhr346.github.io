@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Intro from '../components/Intro.astro';
+import Section from '../components/Section.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="首页 - Personal Homepage">
+  <Header />
+  <Intro />
+  <Section>
+    <slot name="intro" />
+  </Section>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .content {
+    padding: 2rem 0;
+  }
+</style>

@@ -1,0 +1,40 @@
+---
+import ContentLayout from '../layouts/ContentLayout.astro';
+import Section from '../components/Section.astro';
+import PublicationItem from '../components/PublicationItem.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<ContentLayout title="论文">
+  <Section>
+    <h2>学术论文</h2>
+    <p>这里列出我的研究论文和发表作品。</p>
+
+    <PublicationItem
+      title="A Novel Approach to Static Site Generation"
+      authors="Hongri Chen, et al."
+      venue="Journal of Web Technologies"
+      year={2024}
+      pdf="/papers/example-paper-1.pdf"
+      link="https://example.com/paper1"
+    />
+
+    <PublicationItem
+      title="Advancements in Frontend Architecture Patterns"
+      authors="Hongri Chen"
+      venue="International Conference on Software Engineering"
+      year={2023}
+      pdf="/papers/example-paper-2.pdf"
+      link="https://example.com/paper2"
+    />
+
+    <PublicationItem
+      title="Type-Safe Development in Modern JavaScript Ecosystems"
+      authors="Hongri Chen, John Doe"
+      venue="Conference on Programming Languages"
+      year={2022}
+      link="https://example.com/paper3"
+    />
+  </Section>
+  <Footer />
+</ContentLayout>

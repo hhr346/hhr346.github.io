@@ -1,0 +1,28 @@
+<section class="content-section">
+  <h2 class="section-title">
+    <slot name="title" />
+  </h2>
+  <div class="section-content">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .content-section {
+    margin-bottom: 4rem;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 0 0 1.5rem 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+    color: #111827;
+  }
+
+  .section-content {
+    color: #4b5563;
+    line-height: 1.8;
+  }
+</style>
