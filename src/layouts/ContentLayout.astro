@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import Header from '../components/Header.astro';
 
 interface Props {
   title: string;
@@ -10,6 +11,7 @@ const { title, description = "Academic Personal Homepage" } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
+  <Header />
   <main class="content">
     <header class="page-header">
       <h1>{title}</h1>
