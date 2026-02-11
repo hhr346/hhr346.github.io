@@ -1,12 +1,21 @@
 <section class="intro-section">
   <div class="intro-content">
-    <h2 class="intro-title">Hongri Hou</h2>
-    <p class="intro-bio">
-      Personal Developer
-    </p>
-    <p class="intro-desc">
-      Looking forward to build a better world with SaaS.
-    </p>
+    <div class="intro-text">
+      <h1 class="intro-title">Hongri Hou</h1>
+      <p class="intro-bio">Personal Developer</p>
+      <p class="intro-desc">Looking forward to build a better world with SaaS.</p>
+      <div class="intro-links">
+        <a href="/me.jpg" target="_blank" rel="noopener noreferrer" class="link-button view-photo">
+          📸 查看照片
+        </a>
+        <a href="/cv.pdf" download class="link-button download-cv">
+          📄 下载 CV
+        </a>
+      </div>
+    </div>
+    <div class="intro-image">
+      <img src="/me.jpg" alt="Hongri Hou" class="photo" />
+    </div>
   </div>
 </section>
 
@@ -16,25 +25,32 @@
   }
 
   .intro-content {
-    max-width: 800px;
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    max-width: 1200px;
+  }
+
+  .intro-text {
+    flex: 1;
   }
 
   .intro-title {
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: 700;
     margin: 0 0 1rem 0;
     color: #111827;
   }
 
   .intro-bio {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: 600;
     margin: 0 0 1rem 0;
     color: #2563eb;
   }
 
   .intro-desc {
-    font-size: 1rem;
+    font-size: 1.1rem;
     line-height: 1.8;
     color: #4b5563;
     margin: 0 0 2rem 0;
@@ -54,19 +70,70 @@
     text-decoration: none;
     border-radius: 6px;
     transition: background-color 0.2s;
+    font-weight: 500;
   }
 
   .link-button:hover {
     background-color: #1d4ed8;
   }
 
+  .intro-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .photo {
+    width: 280px;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+
+  .photo:hover {
+    transform: scale(1.05);
+  }
+
+  .view-photo {
+    background-color: #10b981;
+  }
+
+  .view-photo:hover {
+    background-color: #059669;
+  }
+
+  .download-cv {
+    background-color: #2563eb;
+  }
+
+  .download-cv:hover {
+    background-color: #1d4ed8;
+  }
+
   @media (max-width: 768px) {
+    .intro-content {
+      flex-direction: column;
+      text-align: center;
+      gap: 2rem;
+    }
+
     .intro-title {
-      font-size: 2rem;
+      font-size: 2.5rem;
     }
 
     .intro-bio {
-      font-size: 1.1rem;
+      font-size: 1.25rem;
+    }
+
+    .intro-links {
+      justify-content: center;
+    }
+
+    .photo {
+      width: 200px;
+      height: 200px;
     }
   }
 </style>
