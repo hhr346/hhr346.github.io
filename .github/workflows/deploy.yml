@@ -30,8 +30,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: List files before build
+        run: ls -la
+
       - name: Build
         run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: List files after build
+        run: ls -la dist/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
