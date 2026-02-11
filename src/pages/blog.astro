@@ -2,63 +2,92 @@
 import ContentLayout from '../layouts/ContentLayout.astro';
 import Section from '../components/Section.astro';
 import Footer from '../components/Footer.astro';
+import { getBlogPosts } from '../lib/content-loader';
+
+const posts = await getBlogPosts();
 ---
 
 <ContentLayout title="博客">
   <Section>
-    <h2>Latest Posts</h2>
+    <h2>最新文章</h2>
     <p>这里记录一些学习笔记和技术思考。</p>
 
-    <article class="blog-item">
-      <div class="blog-meta">
-        <time datetime="2024-01-15">2024年1月15日</time>
-      </div>
-      <h3>如何构建高效的前端架构</h3>
-      <p class="blog-desc">前端架构设计的最佳实践...</p>
-      <a href="#" class="read-more">阅读更多 →</a>
-    </article>
-
-    <article class="blog-item">
-      <div class="blog-meta">
-        <time datetime="2024-01-10">2024年1月10日</time>
-      </div>
-      <h3>TypeScript 进阶指南</h3>
-      <p class="blog-desc">TypeScript 高级类型系统的应用...</p>
-      <a href="#" class="read-more">阅读更多 →</a>
-    </article>
-
-    <article class="blog-item">
-      <div class="blog-meta">
-        <time datetime="2024-01-05">2024年1月5日</time>
-      </div>
-      <h3>微服务架构实践</h3>
-      <p class="blog-desc">大型应用中的微服务设计模式...</p>
-      <a href="#" class="read-more">阅读更多 →</a>
-    </article>
+    <div class="posts-list">
+      {posts.map((post) => (
+        <article class="blog-item">
+          <div class="blog-meta">
+            <time datetime={post.data.pubDate.toISOString()}>
+              {post.data.pubDate.toLocaleDateString('zh-CN')}
+            </time>
+            {post.data.tags.length > 0 && (
+              <div class="blog-tags">
+                {post.data.tags.map((tag) => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </div>
+            )}
+          </div>
+          <h3>
+            <a href={post.url} class="post-title">{post.data.title}</a>
+          </h3>
+          {post.data.description && (
+            <p class="blog-desc">{post.data.description}</p>
+          )}
+          <a href={post.url} class="read-more">阅读更多 →</a>
+        </article>
+      ))}
+    </div>
   </Section>
   <Footer />
 </ContentLayout>
 
 <style>
-  .blog-item {
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--border);
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
   }
 
-  .blog-item:last-child {
-    border-bottom: none;
+  .blog-item {
+    padding: 1.5rem;
+    background-color: var(--bg-secondary);
+    border-radius: 6px;
+    border: 1px solid var(--border);
   }
 
   .blog-meta {
     color: var(--text-muted);
     font-size: 0.9rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
   }
 
-  .blog-item h3 {
+  .blog-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background-color: var(--primary-10);
+    color: var(--primary);
+    border-radius: 9999px;
+    font-size: 0.8rem;
+  }
+
+  .post-title {
     margin: 0 0 0.75rem 0;
     font-size: 1.25rem;
+    color: var(--primary);
+  }
+
+  .post-title:hover {
+    text-decoration: underline;
   }
 
   .blog-desc {

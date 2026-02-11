@@ -2,63 +2,97 @@
 import ContentLayout from '../layouts/ContentLayout.astro';
 import Section from '../components/Section.astro';
 import Footer from '../components/Footer.astro';
+import { getNotes } from '../lib/content-loader';
+
+const notesList = await getNotes();
 ---
 
 <ContentLayout title="笔记">
   <Section>
     <h2>学习笔记</h2>
-    <p>这里记录一些技术学习笔记和心得。</p>
+    <p>这里记录我的学习心得和技术笔记。</p>
 
-    <article class="note-item">
-      <div class="note-meta">
-        <time datetime="2024-01-20">2024年1月20日</time>
-      </div>
-      <h3>现代前端开发最佳实践</h3>
-      <p class="note-desc">关于现代前端开发的一些思考...</p>
-    </article>
-
-    <article class="note-item">
-      <div class="note-meta">
-        <time datetime="2024-01-18">2024年1月18日</time>
-      </div>
-      <h3>AI 辅助开发心得</h3>
-      <p class="note-desc">使用 AI 工具提升开发效率的经验...</p>
-    </article>
-
-    <article class="note-item">
-      <div class="note-meta">
-        <time datetime="2024-01-16">2024年1月16日</time>
-      </div>
-      <h3>系统架构设计原则</h3>
-      <p class="note-desc">构建可扩展系统的思考...</p>
-    </article>
+    <div class="notes-list">
+      {notesList.map((note) => (
+        <article class="note-item">
+          <div class="note-header">
+            <div class="note-meta">
+              <time datetime={note.data.pubDate.toISOString()}>
+                {note.data.pubDate.toLocaleDateString('zh-CN')}
+              </time>
+              {note.data.tags.length > 0 && (
+                <div class="note-tags">
+                  {note.data.tags.map((tag) => (
+                    <span class="tag">{tag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+            <h3>
+              <a href={note.url} class="note-title">{note.data.title}</a>
+            </h3>
+          </div>
+          {note.data.description && (
+            <p class="note-description">{note.data.description}</p>
+          )}
+        </article>
+      ))}
+    </div>
   </Section>
   <Footer />
 </ContentLayout>
 
 <style>
-  .note-item {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border);
+  .notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
   }
 
-  .note-item:last-child {
-    border-bottom: none;
+  .note-item {
+    padding: 1.5rem;
+    background-color: var(--bg-secondary);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .note-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px var(--shadow);
+  }
+
+  .note-header {
+    margin-bottom: 0.75rem;
   }
 
   .note-meta {
-    color: var(--text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
     font-size: 0.9rem;
+    color: var(--text-muted);
     margin-bottom: 0.5rem;
+    align-items: center;
   }
 
-  .note-item h3 {
-    margin: 0 0 0.75rem 0;
+  .note-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .note-title {
+    margin: 0;
     font-size: 1.25rem;
+    color: var(--primary);
   }
 
-  .note-desc {
+  .note-title:hover {
+    text-decoration: underline;
+  }
+
+  .note-description {
     color: var(--text-secondary);
     line-height: 1.8;
     margin: 0;

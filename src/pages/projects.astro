@@ -2,54 +2,81 @@
 import ContentLayout from '../layouts/ContentLayout.astro';
 import Section from '../components/Section.astro';
 import Footer from '../components/Footer.astro';
+import { getProjects } from '../lib/content-loader';
+
+const projectsList = await getProjects();
 ---
 
 <ContentLayout title="项目">
   <Section>
-    <h2>Featured Projects</h2>
+    <h2>精选项目</h2>
     <p>这里展示一些我感兴趣和正在进行的项目。</p>
 
-    <article class="project-item">
-      <h3>Project 1</h3>
-      <p class="project-desc">项目描述...</p>
-      <p class="project-tags">
-        <span class="tag">Astro</span>
-        <span class="tag">TypeScript</span>
-      </p>
-    </article>
-
-    <article class="project-item">
-      <h3>Project 2</h3>
-      <p class="project-desc">项目描述...</p>
-      <p class="project-tags">
-        <span class="tag">React</span>
-        <span class="tag">Node.js</span>
-      </p>
-    </article>
-
-    <article class="project-item">
-      <h3>Project 3</h3>
-      <p class="project-desc">项目描述...</p>
-      <p class="project-tags">
-        <span class="tag">Python</span>
-        <span class="tag">AI</span>
-      </p>
-    </article>
+    <div class="projects-list">
+      {projectsList.map((project) => (
+        <article class="project-item">
+          <h3>
+            {project.data.link ? (
+              <a href={project.data.link} target="_blank" rel="noopener noreferrer">
+                {project.data.title}
+              </a>
+            ) : (
+              <span>{project.data.title}</span>
+            )}
+          </h3>
+          {project.data.description && (
+            <p class="project-desc">{project.data.description}</p>
+          )}
+          {project.data.tags.length > 0 && (
+            <p class="project-tags">
+              {project.data.tags.map((tag) => (
+                <span class="tag">{tag}</span>
+              ))}
+            </p>
+          )}
+          {project.data.repo && (
+            <a href={project.data.repo} class="repo-link" target="_blank" rel="noopener noreferrer">
+              📂 查看代码
+            </a>
+          )}
+        </article>
+      ))}
+    </div>
   </Section>
   <Footer />
 </ContentLayout>
 
 <style>
+  .projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
   .project-item {
-    margin-bottom: 2rem;
     padding: 1.5rem;
     background-color: var(--bg-secondary);
     border-radius: 6px;
+    border: 1px solid var(--border);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .project-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px var(--shadow);
   }
 
   .project-item h3 {
     margin: 0 0 0.75rem 0;
     font-size: 1.25rem;
+  }
+
+  .project-item h3 a {
+    color: var(--primary);
+  }
+
+  .project-item h3 a:hover {
+    text-decoration: underline;
   }
 
   .project-desc {
@@ -62,14 +89,23 @@ import Footer from '../components/Footer.astro';
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
+    margin-bottom: 1rem;
   }
 
-  .tag {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    background-color: #e5e7eb;
-    color: var(--text-secondary);
-    border-radius: 9999px;
-    font-size: 0.8rem;
+  .project-tags .tag {
+    background-color: var(--primary-10);
+    color: var(--primary);
+  }
+
+  .repo-link {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .repo-link:hover {
+    color: var(--primary);
   }
 </style>

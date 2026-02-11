@@ -1,40 +1,164 @@
 ---
 import ContentLayout from '../layouts/ContentLayout.astro';
 import Section from '../components/Section.astro';
-import PublicationItem from '../components/PublicationItem.astro';
 import Footer from '../components/Footer.astro';
+import { getPapers } from '../lib/content-loader';
+
+const papersList = await getPapers();
 ---
 
 <ContentLayout title="论文">
   <Section>
-    <h2>学术论文</h2>
-    <p>这里列出我的研究论文和发表作品。</p>
+    <h2>研究论文</h2>
+    <p>这里记录我的学术研究和工作论文。</p>
 
-    <PublicationItem
-      title="A Novel Approach to Static Site Generation"
-      authors="Hongri Chen, et al."
-      venue="Journal of Web Technologies"
-      year={2024}
-      pdf="/papers/example-paper-1.pdf"
-      link="https://example.com/paper1"
-    />
+    <div class="papers-list">
+      {papersList.map((paper) => (
+        <article class="paper-item">
+          <div class="paper-header">
+            <h3>
+              {paper.data.link ? (
+                <a href={paper.data.link} target="_blank" rel="noopener noreferrer">
+                  {paper.data.title}
+                </a>
+              ) : (
+                <span>{paper.data.title}</span>
+              )}
+            </h3>
+            <div class="paper-meta">
+              {paper.data.authors && (
+                <span class="authors">
+                  {Array.isArray(paper.data.authors) ? paper.data.authors.join(', ') : paper.data.authors}
+                </span>
+              )}
+              {(paper.data.venue || paper.data.year) && (
+                <span class="venue">
+                  {paper.data.venue}
+                  {paper.data.year && paper.data.venue && ' · '}
+                  {paper.data.year}
+                </span>
+              )}
+            </div>
+          </div>
 
-    <PublicationItem
-      title="Advancements in Frontend Architecture Patterns"
-      authors="Hongri Chen"
-      venue="International Conference on Software Engineering"
-      year={2023}
-      pdf="/papers/example-paper-2.pdf"
-      link="https://example.com/paper2"
-    />
+          <div class="paper-body">
+            <div class="paper-abstract">
+              <strong>摘要：</strong>
+              <p>{paper.data.abstract}</p>
+            </div>
+          </div>
 
-    <PublicationItem
-      title="Type-Safe Development in Modern JavaScript Ecosystems"
-      authors="Hongri Chen, John Doe"
-      venue="Conference on Programming Languages"
-      year={2022}
-      link="https://example.com/paper3"
-    />
+          {paper.data.tags.length > 0 && (
+            <div class="paper-tags">
+              {paper.data.tags.map((tag) => (
+                <span class="tag">{tag}</span>
+              ))}
+            </div>
+          )}
+
+          {paper.data.draft && (
+            <span class="draft-badge">草稿</span>
+          )}
+        </article>
+      ))}
+    </div>
   </Section>
   <Footer />
 </ContentLayout>
+
+<style>
+  .papers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .paper-item {
+    padding: 1.5rem;
+    background-color: var(--bg-secondary);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+
+  .paper-header {
+    margin-bottom: 1rem;
+  }
+
+  .paper-item h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+  }
+
+  .paper-item h3 a {
+    color: var(--primary);
+  }
+
+  .paper-item h3 a:hover {
+    text-decoration: underline;
+  }
+
+  .paper-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    align-items: center;
+  }
+
+  .authors {
+    font-style: italic;
+  }
+
+  .venue {
+    background-color: var(--bg-tertiary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+  }
+
+  .paper-body {
+    margin-bottom: 1rem;
+  }
+
+  .paper-abstract {
+    padding: 1rem;
+    background-color: var(--bg-tertiary);
+    border-left: 3px solid var(--primary);
+    border-radius: 0 6px 6px 0;
+  }
+
+  .paper-abstract strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+
+  .paper-abstract p {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.8;
+  }
+
+  .paper-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+  }
+
+  .paper-tags .tag {
+    background-color: var(--primary-10);
+    color: var(--primary);
+  }
+
+  .draft-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background-color: #fef3c7;
+    color: #92400e;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+</style>
