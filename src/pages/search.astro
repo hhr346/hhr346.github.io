@@ -9,45 +9,296 @@ import Footer from '../components/Footer.astro';
     <h2>站内搜索</h2>
     <p>搜索本站点的所有内容。</p>
 
-    <div id="search" class="search-container">
-      <input type="text" id="pagefind-search-input" placeholder="输入关键词搜索..." />
-      <div id="pagefind-search-results"></div>
+    <div class="search-container">
+      <input
+        type="text"
+        id="search-input"
+        placeholder="输入关键词搜索... (按 Enter 开始搜索)"
+        autocomplete="off"
+      />
+      <div id="search-loading" class="search-loading">
+        <div class="spinner"></div>
+        <span>搜索中...</span>
+      </div>
+      <div id="search-results" class="search-results">
+        <!-- 搜索结果将在这里显示 -->
+      </div>
     </div>
   </Section>
   <Footer />
 </ContentLayout>
 
 <script type="module">
-  import { PagefindSvelte } from "pagefind";
+  // 搜索数据
+  const searchData = {
+    blog: [
+      {
+        title: '欢迎访问我的个人网站',
+        url: '/blog/welcome',
+        excerpt: '这是一个占位博客文章，展示内容系统如何工作',
+        category: '博客',
+        pubDate: '2026-02-10'
+      }
+    ],
+    projects: [
+      {
+        title: '个人项目',
+        url: '/projects/my-project',
+        excerpt: '我的第一个项目展示',
+        category: '项目',
+        pubDate: '2026-02-10'
+      }
+    ],
+    papers: [
+      {
+        title: '示例论文',
+        url: '/papers/example-paper',
+        excerpt: '这是一篇示例论文的占位符。',
+        category: '论文',
+        pubDate: '2026-02-10'
+      }
+    ],
+    notes: [
+      {
+        title: '编程笔记',
+        url: '/notes/coding',
+        excerpt: '我的学习笔记占位符。',
+        category: '笔记',
+        pubDate: '2026-02-10'
+      }
+    ]
+  };
 
-  const search = new PagefindSvelte({
-    element: "#pagefind-search-input",
-    results: "#pagefind-search-results",
-  });
+  const searchInput = document.getElementById('search-input');
+  const searchResults = document.getElementById('search-results');
+  const searchLoading = document.getElementById('search-loading');
+
+  searchInput.addEventListener('input', debounce(performSearch, 300));
+
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
+  function performSearch() {
+    const query = searchInput.value.trim().toLowerCase();
+
+    // 清空之前的搜索结果
+    searchResults.innerHTML = '';
+
+    // 如果查询为空，不显示任何结果
+    if (!query) {
+      searchLoading.style.display = 'none';
+      return;
+    }
+
+    // 显示加载状态
+    searchLoading.style.display = 'flex';
+
+    // 模拟搜索延迟（为了更好的用户体验）
+    setTimeout(() => {
+      let results = [];
+
+      // 搜索所有分类
+      Object.keys(searchData).forEach(category => {
+        searchData[category].forEach(item => {
+          const titleMatch = item.title.toLowerCase().includes(query);
+          const excerptMatch = item.excerpt.toLowerCase().includes(query);
+          const tagsMatch = item.tags ? item.tags.some(tag =>
+            tag.toLowerCase().includes(query)
+          ) : false;
+          const pubDateMatch = item.pubDate && item.pubDate.includes(query);
+
+          if (titleMatch || excerptMatch || tagsMatch || pubDateMatch) {
+            results.push({
+              ...item,
+              category
+            });
+          }
+        });
+      });
+
+      // 显示结果
+      searchLoading.style.display = 'none';
+
+      if (results.length === 0) {
+        searchResults.innerHTML = `
+          <div class="no-results">
+            <p>没有找到相关结果</p>
+          </div>
+        `;
+      } else {
+        const resultsHTML = results.map(result => `
+          <div class="search-result">
+            <div class="result-header">
+              <span class="result-category">${result.category}</span>
+              <a href="${result.url}" class="result-link">${result.title}</a>
+            </div>
+            <p class="result-excerpt">${highlightMatch(result.excerpt, query)}</p>
+            <div class="result-meta">
+              <span class="result-url">${result.url}</span>
+            </div>
+          </div>
+        `).join('');
+
+        searchResults.innerHTML = resultsHTML;
+      }
+    }, 300);
+  }
+
+  function highlightMatch(text, query) {
+    if (!query) return text;
+
+    const regex = new RegExp(`(${query})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
+  }
 </script>
 
 <style>
   .search-container {
     margin-top: 2rem;
+    max-width: 800px;
   }
 
-  #pagefind-search-input {
+  #search-input {
     width: 100%;
-    max-width: 500px;
-    padding: 0.75rem;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font-size: 1rem;
-  }
-
-  #pagefind-search-results {
-    margin-top: 1.5rem;
-  }
-
-  .pagefind-search-result {
-    margin-bottom: 1.5rem;
     padding: 1rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 1.1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  #search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-10);
+  }
+
+  #search-loading {
+    display: none;
+    margin-top: 1.5rem;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  .spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  #search-results {
+    margin-top: 2rem;
+  }
+
+  .search-result {
+    padding: 1.5rem;
     background-color: var(--bg-secondary);
-    border-radius: 6px;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .search-result:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.1);
+  }
+
+  .result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .result-category {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background-color: var(--primary-10);
+    color: var(--primary);
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .result-link {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .result-link:hover {
+    text-decoration: underline;
+  }
+
+  .result-excerpt {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0 0 0.75rem 0;
+  }
+
+  .result-excerpt mark {
+    background-color: var(--primary-10);
+    color: var(--primary);
+    padding: 0.1rem 0.2rem;
+    border-radius: 2px;
+  }
+
+  .result-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .result-url {
+    font-family: 'Monaco', 'Consolas', monospace;
+    font-size: 0.8rem;
+  }
+
+  .no-results {
+    padding: 3rem;
+    text-align: center;
+    color: var(--text-muted);
+  }
+
+  .no-results p {
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .result-header {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .result-category {
+      align-self: flex-start;
+    }
+
+    #search-input {
+      font-size: 1rem;
+    }
   }
 </style>
